@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OldCookVPN — Быстрый и надёжный VPN 🚀</title>
+    <meta name="description" content="OldCookVPN — быстрый и безопасный VPN без рекламы. Пробная версия, Telegram-бот, тарифы.">
+    <!-- Font Awesome и Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+    <style>
+        :root {
+            --background: #0f0f0f;
+            --foreground: #fefefe;
+            --color-gray-light: #d0d0d0;
+            --color-gray: #2d2d2d;
+            --color-gray-dark: #1b1b1b;
+            --color-primary: #FFD700;
+            --color-primary-light: #FFEA70;
+            --color-secondary: #FFA500;
+            --color-secondary-light: #FFC94D;
+            --header-bg: #1a1a1a;
+            --popular-bg: rgba(255, 215, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body, html {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            max-width: 100vw;
+            line-height: 1.6;
+        }
+
+        /* Фоновый узор */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 20%),
+                    radial-gradient(circle at 80% 70%, rgba(255, 165, 0, 0.05) 0%, transparent 20%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 16px;
+            background-color: var(--header-bg);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        /* Бургер меню */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--foreground);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu {
+            display: flex;
+            gap: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item {
+            font-size: 18px;
+            text-decoration: none;
+            color: var(--foreground);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-item i {
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            color: var(--color-secondary);
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 180px 24px 100px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.9), rgba(26, 26, 26, 0.9));
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--color-gray-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .button {
+            padding: 14px 28px;
+            font-size: 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            background-color: var(--color-primary);
+            color: #000;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            background-color: var(--color-secondary);
+            box-shadow: 0 6px 12px rgba(255, 165, 0, 0.2);
+            color: #000;
+        }
+
+        .button i {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .button:hover i {
+            transform: scale(1.1);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: var(--color-gray-dark);
+            padding: 30px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid var(--color-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            /*transform: translateY(-5px);*/
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--color-primary);
+        }
+
+        .feature-card:hover::before {
+            height: 6px;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /*.feature-card:hover .feature-icon {*/
+        /*    transform: scale(1.1);*/
+        /*}*/
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-title {
+            color: var(--color-primary);
+        }
+
+        .feature-description {
+            color: var(--color-gray-light);
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-description {
+            color: var(--foreground);
+        }
+
+        .section {
+            padding: 80px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section h2 {
+            font-size: 36px;
+            color: var(--color-primary);
+            margin-bottom: 24px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            transition: all 0.3s ease;
+        }
+
+        .section h2:hover::after {
+            width: 100px;
+            height: 4px;
+        }
+
+        .section p {
+            font-size: 18px;
+            color: var(--color-gray-light);
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .pricing {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .price-card {
+            background-color: var(--color-gray);
+            border-radius: 12px;
+            padding: 30px;
+            width: 280px;
+            transition: all 1s ease-in-out !important;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--color-gray-dark);
+        }
+
+        .price-card.popular {
+            background-color: var(--popular-bg);
+            border: 1px solid var(--color-primary);
+        }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--color-primary);
+        }
+
+        .price-card h3 {
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            font-size: 22px;
+            transition: color 0.3s ease;
+        }
+
+        .price-card:hover h3 {
+            color: var(--color-primary);
+        }
+
+        .price-card .price {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--color-primary);
+            transition: color 0.3s ease;
+        }
+
+        .price-card:hover .price {
+            color: var(--color-secondary);
+        }
+
+        .price-card .period {
+            color: var(--color-gray-light);
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .price-card:hover .period {
+            color: var(--foreground);
+        }
+
+        .price-card .features-list {
+            text-align: left;
+            margin: 20px 0;
+            list-style: none;
+        }
+
+        .price-card .features-list li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+            transition: color 0.3s ease;
+        }
+
+        .price-card:hover .features-list li {
+            color: var(--foreground);
+        }
+
+        .price-card .features-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            transition: all 0.3s ease;
+        }
+
+        .price-card:hover .features-list li::before {
+            transform: scale(1.1);
+        }
+
+        .price-card .button {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Бургер меню для мобильных */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--header-bg);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .menu.active {
+                right: 0;
+            }
+
+            .hero {
+                padding: 150px 24px 80px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .price-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Кнопка "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--color-primary);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            border: none;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--color-secondary);
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .back-to-top i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-to-top:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* Отключаем стандартные transition для элементов с AOS */
+        [data-aos] {
+            transition-property: opacity, transform !important;
+        }
+
+        /* Для элементов с hover-эффектами явно указываем свойства */
+        .feature-card,
+        .price-card,
+        .button {
+            transition:
+                    transform 0.3s ease,
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease,
+                    background-color 0.3s ease !important;
+        }
+
+        /* Отдельно для текстовых элементов */
+        .feature-title,
+        .feature-description,
+        .price-card h3,
+        .price-card .price,
+        .price-card .period,
+        .price-card .features-list li {
+            transition: color 0.3s ease !important;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a class="logo" href="#">
+        <i class="fas fa-shield-alt"></i>
+        OldCookVPN
+    </a>
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <nav class="menu" id="mainMenu">
+        <a class="menu-item" href="#telegram">
+            <i class="fas fa-question-circle"></i>
+            Не работает Telegram?
+        </a>
+        <a class="menu-item" href="#blog">
+            <i class="fas fa-blog"></i>
+            Блог
+        </a>
+        <a class="menu-item" href="#login">
+            <i class="fas fa-sign-in-alt"></i>
+            Войти
+        </a>
+        <a class="menu-item" href="#support">
+            <i class="fas fa-headset"></i>
+            Поддержка
+        </a>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <h1 class="hero-title" data-aos="fade-down" data-aos-duration="800">OldCookVPN</h1>
+        <p class="hero-subtitle" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="800">Быстрый и бесплатный VPN-доступ к сайтам и приложениям, заблокированным в вашем регионе</p>
+        <div class="button-group">
+            <a href="https://t.me/oldcookvpn_bot" class="button" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="600">
+                <i class="fab fa-telegram"></i>
+                Перейти в Telegram-бота
+            </a>
+            <a href="#trial" class="button" data-aos="zoom-in" data-aos-delay="500" data-aos-duration="600">
+                <i class="fas fa-rocket"></i>
+                Узнать о пробной версии
+            </a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <div class="feature-title">Высокая скорость</div>
+            <div class="feature-description">Стабильное соединение до 100 Мб/с с минимальными задержками</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon">
+                <i class="fas fa-ad"></i>
+            </div>
+            <div class="feature-title">Без рекламы</div>
+            <div class="feature-description">Никакой рекламы в приложении или браузере. Полная конфиденциальность</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="feature-title">Надёжный</div>
+            <div class="feature-description">Современные протоколы обхода блокировок и шифрование данных</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="feature-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div class="feature-title">Поддержка</div>
+            <div class="feature-description">Круглосуточная техподдержка в Telegram. Ответим за 5 минут</div>
+        </div>
+    </section>
+
+    <section class="section" id="trial">
+        <h2 data-aos="fade-up">Пробная версия</h2>
+        <p data-aos="fade-up" data-aos-delay="0">Попробуйте OldCookVPN бесплатно на 24 часа. Без регистрации и без рекламы. Просто нажмите кнопку выше.</p>
+        <div class="button-group">
+            <a href="https://t.me/oldcookvpn_bot" class="button" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fab fa-telegram"></i>
+                Получить пробную версию
+            </a>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 data-aos="fade-up">Тарифы</h2>
+        <p data-aos="fade-up" data-aos-delay="100">Выберите подходящий тарифный план для комфортного использования VPN</p>
+        <div class="pricing">
+            <div class="price-card" data-aos="fade-up" data-aos-delay="200">
+                <h3>1 месяц</h3>
+                <div class="price">99 ₽</div>
+                <div class="period">в месяц</div>
+                <ul class="features-list">
+                    <li>Доступ ко всем серверам</li>
+                    <li>Поддержка 24/7</li>
+                    <li>Безлимитный трафик</li>
+                    <li>5 одновременных подключений</li>
+                </ul>
+                <a href="#" class="button">Выбрать</a>
+            </div>
+            <div class="price-card popular" data-aos="fade-up" data-aos-delay="300">
+                <div class="popular-badge">Рекомендуем</div>
+                <h3>3 месяца</h3>
+                <div class="price">249 ₽</div>
+                <div class="period">83 ₽ в месяц</div>
+                <ul class="features-list">
+                    <li>Доступ ко всем серверам</li>
+                    <li>Поддержка 24/7</li>
+                    <li>Безлимитный трафик</li>
+                    <li>5 одновременных подключений</li>
+                    <li>Экономия 15%</li>
+                </ul>
+                <a href="#" class="button">Выбрать</a>
+            </div>
+            <div class="price-card" data-aos="fade-up" data-aos-delay="400">
+                <h3>12 месяцев</h3>
+                <div class="price">749 ₽</div>
+                <div class="period">62 ₽ в месяц</div>
+                <ul class="features-list">
+                    <li>Доступ ко всем серверам</li>
+                    <li>Поддержка 24/7</li>
+                    <li>Безлимитный трафик</li>
+                    <li>10 одновременных подключений</li>
+                    <li>Экономия 35%</li>
+                    <li>Приоритетная поддержка</li>
+                </ul>
+                <a href="#" class="button">Выбрать</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Кнопка "Наверх" -->
+<div class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<!-- Подключаем библиотеки -->
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- GSAP + ScrollTo -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+<script>
+    // Инициализация AOS
+    AOS.init({
+        once: true,
+        easing: 'ease-out-quad',
+        duration: 800
+    });
+
+    // Бургер-меню и блокировка скролла
+    const menuToggle = document.getElementById('menuToggle');
+    const mainMenu = document.getElementById('mainMenu');
+    const html = document.documentElement;
+    const body = document.body;
+
+    function toggleMenu() {
+        const isActive = mainMenu.classList.toggle('active');
+
+        // Переключение иконки
+        menuToggle.innerHTML = isActive
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+
+        // Блокировка скролла
+        if (isActive) {
+            body.style.overflow = 'hidden';
+            body.style.position = 'fixed';
+            body.style.width = '100%';
+        } else {
+            body.style.overflow = '';
+            body.style.position = '';
+            body.style.width = '';
+        }
+    }
+
+    // Открытие/закрытие меню по клику на бургер
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation(); // Предотвращаем всплытие, чтобы не сработал закрывающий клик по документу
+        toggleMenu();
+    });
+
+    // Закрытие меню при клике на пункт
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', toggleMenu);
+    });
+
+    // Закрытие меню при клике вне его области
+    document.addEventListener('click', function(e) {
+        if (mainMenu.classList.contains('active') &&
+            !mainMenu.contains(e.target) &&
+            e.target !== menuToggle) {
+            toggleMenu();
+        }
+    });
+
+    // Кнопка "Наверх"
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        gsap.to(window, {
+            scrollTo: 0,
+            duration: 0.8,
+            ease: "power2.inOut"
+        });
+    });
+
+    // Плавная прокрутка для всех ссылок
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            // Проверяем, является ли ссылка якорем на текущей странице
+            if (document.querySelector(targetId)) {
+                e.preventDefault();
+
+                const targetElement = document.querySelector(targetId);
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                gsap.to(window, {
+                    scrollTo: {
+                        y: targetPosition,
+                        autoKill: false
+                    },
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+            }
+        });
+    });
+
+    // Анимация кнопок при наведении с GSAP
+    document.querySelectorAll('.button').forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            gsap.to(button, {
+                y: -3,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+
+        button.addEventListener('mouseleave', () => {
+            gsap.to(button, {
+                y: 0,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+    });
+
+    // Анимация карточек при наведении
+    // document.querySelectorAll('.feature-card, .price-card').forEach(card => {
+    //     card.addEventListener('mouseenter', () => {
+    //         gsap.to(card, {
+    //             y: -5,
+    //             duration: 0.3,
+    //             ease: "power2.out"
+    //         });
+    //     });
+    //
+    //     card.addEventListener('mouseleave', () => {
+    //         gsap.to(card, {
+    //             y: 0,
+    //             duration: 0.3,
+    //             ease: "power2.out"
+    //         });
+    //     });
+    // });
+</script>
+</body>
+</html>

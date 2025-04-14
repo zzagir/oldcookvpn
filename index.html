@@ -119,9 +119,9 @@
             color: var(--color-secondary);
         }
 
-        .menu-item:hover i {
-            transform: scale(1.1);
-        }
+        /*.menu-item:hover i {*/
+        /*    transform: scale(1.1);*/
+        /*}*/
 
         .hero {
             text-align: center;
@@ -160,7 +160,7 @@
             background-color: var(--color-primary);
             color: #000;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 1s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -198,7 +198,7 @@
             background-color: var(--color-gray-dark);
             padding: 30px;
             border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.7s ease !important;
             border: 1px solid var(--color-gray);
             position: relative;
             overflow: hidden;
@@ -311,7 +311,7 @@
             border-radius: 12px;
             padding: 30px;
             width: 280px;
-            transition: all 1s ease-in-out !important;
+            transition: all 0.3s ease-in-out !important;
             position: relative;
             overflow: hidden;
             border: 1px solid var(--color-gray-dark);
@@ -397,6 +397,7 @@
             text-align: center;
             justify-content: center;
             margin-top: 20px;
+            transition: all 0.3s ease;
         }
 
         /* Бургер меню для мобильных */
@@ -570,7 +571,7 @@
         <h2 data-aos="fade-up">Пробная версия</h2>
         <p data-aos="fade-up" data-aos-delay="0">Попробуйте OldCookVPN бесплатно на 24 часа. Без регистрации и без рекламы. Просто нажмите кнопку выше.</p>
         <div class="button-group">
-            <a href="https://t.me/oldcookvpn_bot" class="button" data-aos="zoom-in" data-aos-delay="200">
+            <a href="https://t.me/oldcookvpn_bot" class="button" data-aos="zoom-in" data-aos-delay="300">
                 <i class="fab fa-telegram"></i>
                 Получить пробную версию
             </a>
@@ -736,23 +737,23 @@
     });
 
     // Анимация кнопок при наведении с GSAP
-    document.querySelectorAll('.button').forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            gsap.to(button, {
-                y: -3,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
-
-        button.addEventListener('mouseleave', () => {
-            gsap.to(button, {
-                y: 0,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
-    });
+    // document.querySelectorAll('.button').forEach(button => {
+    //     button.addEventListener('mouseenter', () => {
+    //         gsap.to(button, {
+    //             y: -3,
+    //             duration: 0.3,
+    //             ease: "power2.out"
+    //         });
+    //     });
+    //
+    //     button.addEventListener('mouseleave', () => {
+    //         gsap.to(button, {
+    //             y: 0,
+    //             duration: 0.3,
+    //             ease: "power2.out"
+    //         });
+    //     });
+    // });
 
     // Анимация карточек при наведении
     // document.querySelectorAll('.feature-card, .price-card').forEach(card => {
